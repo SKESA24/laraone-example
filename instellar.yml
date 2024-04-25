@@ -27,7 +27,7 @@ dependencies:
     - ca-certificates
     - php82-pgsql
     - php82-pdo_pgsql
-    - laraone-openrc
+    - laraone-example-openrc
 
 stack: alpine/3.19
 
@@ -49,6 +49,21 @@ build:
   destinations:
     - '*'
 
+hook:
+  post-deinstall: |
+    rc-service laraone-example stop
+    rc-update del laraone-example
+  post-install: |
+    rc-update add laraone-example
+    rc-service laraone-example configure
+    rc-service laraone-example migrate
+  post-upgrade: |
+    rc-service laraone-example configure
+    rc-service laraone-example migrate
+    rc-service laraone-example start
+  pre-upgrade: |
+    rc-service laraone-example stop
+
 run:
   commands:
     - binary: php
@@ -64,31 +79,16 @@ run:
       name: configure
       path: /usr/bin
     - binary: tail
-      call: -f -n 100 /var/log/laraone/current
+      call: -f -n 100 /var/log/laraone-example/current
       name: logs
       path: /usr/bin
-  name: laraone
+  name: laraone-example
   services:
     - binary: php
       name: web
       path: /usr/bin
       start:
         call: artisan octane:start --server=frankenphp
-
-hook:
-  post-deinstall: |
-    rc-service laraone stop
-    rc-update del laraone
-  post-install: |
-    rc-update add laraone
-    rc-service laraone configure
-    rc-service laraone migrate
-  post-upgrade: |
-    rc-service laraone configure
-    rc-service laraone migrate
-    rc-service laraone start
-  pre-upgrade: |
-    rc-service laraone stop
 
 kits:
   - description: web service

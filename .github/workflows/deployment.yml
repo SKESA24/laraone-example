@@ -74,6 +74,6 @@ jobs:
         env:
           WORKFLOW_REF: ${{ github.ref }}
           WORKFLOW_SHA: ${{ github.sha }}
-          INSTELLAR_ENDPOINT: https://sandbox.opsmaru.dev
+          INSTELLAR_ENDPOINT: https://opsmaru.com
           INSTELLAR_PACKAGE_TOKEN: ${{secrets.INSTELLAR_PACKAGE_TOKEN}}
           INSTELLAR_AUTH_TOKEN: ${{secrets.INSTELLAR_AUTH_TOKEN}}
